@@ -18,6 +18,7 @@ use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
+use Cake\ORM\TableRegistry;
 
 /**
  * Static content controller
@@ -36,8 +37,15 @@ class JobsController extends AppController
     
    }
 
-   public function list() {
+   public function greet() {
+   	$jobs = TableRegistry::get('Jobs');
+	$query = $jobs->find();
+	foreach ($query as $row) {
+    	echo "<div>" . $row->id . " " . $row->name . " " . $row->description . "</div>";
+	}
     echo "We are in Jobs Controller";
-    die();
-   }
+    // immer benutzen, falls die Daten ueber HTML uebergegeben werden
+    $this->set(["query" => $query]);
+    $this->render("greet");
+  }
 }
