@@ -52,7 +52,13 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
     $routes->connect('/user', ['controller' => 'User', 'action' => 'index']);
     $routes->connect('/userlist', ['controller' => 'User', 'action' => 'list']);
-    $routes->connect('/jobs', ['controller' => 'Jobs', 'action' => 'greet']);
+    $routes->connect('/jobs', ['controller' => 'Jobs', 'action' => 'list']);
+    $routes->connect('/create', ['controller' => 'Jobs', 'action' => 'create']);
+    $routes->connect('/home', ['controller' => 'Jobs', 'action' => 'index']);
+    $routes->connect('/show/:id', ['controller' => 'Jobs', 'action' => 'show'])
+    ->setPass(['id']);
+    $routes->connect('/edit/:id/:token', ['controller' => 'Jobs', 'action' => 'viewjob'])
+    ->setPass(['id', 'token']);
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
      */

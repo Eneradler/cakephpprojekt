@@ -51,13 +51,22 @@ class JobsTable extends Table
             ->scalar('name')
             ->maxLength('name', 255)
             ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->notEmpty('name')
+            ->requirePresence('name', 'true');
+            /*->add('name', 'notEmpty', [
+                'rule' => 'notEmpty',
+                'message' => __('You need to provide a name'),
+            ]);*/
 
         $validator
             ->scalar('description')
             ->requirePresence('description', 'create')
-            ->notEmpty('description');
-
+            ->notEmpty('description')
+            ->requirePresence('name', 'true');
+            /*->add('description', 'notEmpty', [
+                'rule' => 'notEmpty',
+                'message' => __('You need to provide a description'),
+            ]);*/
         return $validator;
     }
 }

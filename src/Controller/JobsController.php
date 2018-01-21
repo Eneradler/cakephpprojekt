@@ -19,7 +19,10 @@ use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
 use Cake\ORM\TableRegistry;
-
+use Cake\Mailer\Email;
+use Cake\Routing\Router;
+use App\Controller\AppController;
+use Cake\Utility\Security;
 /**
  * Static content controller
  *
@@ -29,23 +32,84 @@ use Cake\ORM\TableRegistry;
  */
 class JobsController extends AppController
 {
-
+   // main 
    public function index() {
-    $test = 12;
-    $this->set(["testvar" => $test]);
-    $this->render("index");
-    
+    $this->render();
    }
-
-   public function greet() {
+   // show all jobs
+   public function list() {
    	$jobs = TableRegistry::get('Jobs');
 	$query = $jobs->find();
-	foreach ($query as $row) {
-    	echo "<div>" . $row->id . " " . $row->name . " " . $row->description . "</div>";
-	}
-    echo "We are in Jobs Controller";
-    // immer benutzen, falls die Daten ueber HTML uebergegeben werden
     $this->set(["query" => $query]);
-    $this->render("greet");
+    $this->render("list");
+  }
+  // create a new job
+  public function create() {
+  	$this->render();
+  }
+  // add a new job
+  public function add() {
+  	if ($this->request->is('post')) {
+  		// get data from the form
+  		$data = $this->request->data;
+  		$timeStr = str_replace("0.", "", microtime());
+		$timeStr = str_replace(" ", "", $timeStr);
+		$token = Security::hash($timeStr);
+		// temporary realisation of validation, because implementation of validator
+		// was not working in my code. I think the validation should be in model
+  		if($data['name'] == '' || $data['description'] == '' || $data['email'] == ''){
+  			$this->Flash->error(__('Please fill all fields.'));
+  			return $this->redirect(array('action' => 'create'));
+  		}
+  		// connect to DB table
+  		$jobs = TableRegistry::get('Jobs');
+  		// create new record
+  		$job = $jobs->newEntity();
+  		// set new record with values from the form
+  		$job->name = $data['name'];
+  		$job->description = $data['description'];
+  		$job->token = $token;
+  		// save the cecord
+  		if ($jobs->save($job)) {
+  			$this->Flash->success(__('Your job has been saved.'));
+  			//$url = 'http://localhost:8765/jobs';
+  			$id = $job->id;
+  			$url= Router::url([
+    			"controller" => "Jobs",
+    			"action" => "viewjob",
+    			$id,
+    			$token,
+    			'_full' => true
+    		]);
+  			/*Email::configTransport('gmail', [
+                'host' => 'ssl://smtp.gmail.com',
+                'port' => 465,
+                'username' => 'mistercake2018@gmail.com',
+                'password' => 'ghblevfqntgfhjkm',
+                'className' => 'Smtp'
+            ]);*/
+  			$email = new Email();
+  			//$email->setTransport('gmail');
+  			$email->from(['mistercake2018@gmail.com' => 'My Site'])
+    			  ->to($data['email'])
+    			  ->subject('Test Mail')
+    			  ->send($url);
+  			return $this->redirect(array('action' => 'index'));
+		}
+		// error if the record was not saved
+		$this->Flash->error(__('Unable to add your job.'));
+    }
+  }
+  // show the job
+  public function show($id){
+ 	$this->set(['id' => $id]);
+ 	$this->render('show');
+  }
+  // view the created job
+  public function viewjob($id, $token){
+  		$jobs = TableRegistry::get('Jobs');
+		$query = $jobs->get($id);
+		$this->set(['query' => $query]);
+ 		$this->render('viewjob');
   }
 }
