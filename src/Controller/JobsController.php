@@ -89,9 +89,9 @@ class JobsController extends AppController
             ]);*/
   			$email = new Email();
   			//$email->setTransport('gmail');
-  			$email->from(['mistercake2018@gmail.com' => 'My Site'])
+  			$email->from(['mistercake2018@gmail.com' => 'Job Market'])
     			  ->to($data['email'])
-    			  ->subject('Test Mail')
+    			  ->subject('Edit your job')
     			  ->send($url);
   			return $this->redirect(array('action' => 'index'));
 		}
@@ -156,7 +156,9 @@ class JobsController extends AppController
   }*/
   // show the job
   public function show($id){
- 	$this->set(['id' => $id]);
+  	$jobs = TableRegistry::get('Jobs');
+	$job = $jobs->get($id);
+ 	$this->set(['job' => $job]);
  	$this->render('show');
   }
   // edit the job
