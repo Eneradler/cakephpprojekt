@@ -159,13 +159,6 @@ class JobsController extends AppController
  	$this->set(['id' => $id]);
  	$this->render('show');
   }
-  // view the created job
-  /*public function viewjob($id, $token){
-  		$jobs = TableRegistry::get('Jobs');
-		$query = $jobs->get($id);
-		$this->set(['query' => $query]);
- 		$this->render('viewjob');
-  }*/
   // edit the job
   public function edit($id, $token) {
   	  	$jobs = TableRegistry::get('Jobs');
@@ -183,6 +176,12 @@ class JobsController extends AppController
   }
   // delete the job
   public function delete($id, $token) {
-  	
+    $jobs = TableRegistry::get('Jobs');
+	$job = $jobs->get($id);
+    if ($jobs->delete($job)) {
+        $this->Flash->success(__('The job has been deleted.'));
+        return $this->redirect(['action' => 'index']);
+    }
+
   }
 }

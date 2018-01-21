@@ -8,8 +8,10 @@
       echo $this->Form->control('name');
       echo $this->Form->control('description');
       echo $this->Form->Submit('Edit');
+      
       echo $this->Form->end();
   ?>
   <p>Or delete the job:</p>
-  <?php echo $this->Html->link('Delete', ['controller' => 'Jobs', 'action' => 'delete', $job->id, $job->token]); ?>
+  <?php echo $this->Html->link('Delete', ['controller' => 'Jobs', 'action' => 'delete', $job->id, $job->token], ['confirm' => 'Are you sure?']);?>
+      
 </div>
