@@ -45,10 +45,64 @@ class JobsController extends AppController
   }
   // create a new job
   public function create() {
+  	$jobs = TableRegistry::get('Jobs');
+    // create new record
+    $job = $jobs->newEntity();
+    if ($this->request->is('post')) {
+  		// get data from the form
+  		$data = $this->request->data;
+  		$timeStr = str_replace("0.", "", microtime());
+		$timeStr = str_replace(" ", "", $timeStr);
+		$token = Security::hash($timeStr);
+		// temporary realisation of validation, because implementation of validator
+		// was not working in my code. I think the validation should be in model
+  		if(/*$data['name'] == '' || $data['description'] == '' || */$data['email'] == ''){
+  			$this->Flash->error(__('Please fill all fields.'));
+  			return $this->redirect(array('action' => 'create'));
+  		}
+  		// connect to DB table
+  		//$jobs = TableRegistry::get('Jobs');
+  		// create new record
+  		//$job = $jobs->newEntity();
+  		// set new record with values from the form
+  		$job->name = $data['name'];
+  		$job->description = $data['description'];
+  		$job->token = $token;
+  		// save the cecord
+  		if ($jobs->save($job)) {
+  			$this->Flash->success(__('Your job has been saved.'));
+  			//$url = 'http://localhost:8765/jobs';
+  			$id = $job->id;
+  			$url= Router::url([
+    			"controller" => "Jobs",
+    			"action" => "viewjob",
+    			$id,
+    			$token,
+    			'_full' => true
+    		]);
+  			/*Email::configTransport('gmail', [
+                'host' => 'ssl://smtp.gmail.com',
+                'port' => 465,
+                'username' => 'mistercake2018@gmail.com',
+                'password' => 'ghblevfqntgfhjkm',
+                'className' => 'Smtp'
+            ]);*/
+  			$email = new Email();
+  			//$email->setTransport('gmail');
+  			$email->from(['mistercake2018@gmail.com' => 'My Site'])
+    			  ->to($data['email'])
+    			  ->subject('Test Mail')
+    			  ->send($url);
+  			return $this->redirect(array('action' => 'index'));
+		}
+		// error if the record was not saved
+		$this->Flash->error(__('Unable to add your job.'));
+    }
+    $this->set(['job' => $job]);
   	$this->render();
   }
   // add a new job
-  public function add() {
+ /* public function add() {
   	if ($this->request->is('post')) {
   		// get data from the form
   		$data = $this->request->data;
@@ -88,7 +142,7 @@ class JobsController extends AppController
                 'password' => 'ghblevfqntgfhjkm',
                 'className' => 'Smtp'
             ]);*/
-  			$email = new Email();
+  			/*$email = new Email();
   			//$email->setTransport('gmail');
   			$email->from(['mistercake2018@gmail.com' => 'My Site'])
     			  ->to($data['email'])
@@ -99,17 +153,36 @@ class JobsController extends AppController
 		// error if the record was not saved
 		$this->Flash->error(__('Unable to add your job.'));
     }
-  }
+  }*/
   // show the job
   public function show($id){
  	$this->set(['id' => $id]);
  	$this->render('show');
   }
   // view the created job
-  public function viewjob($id, $token){
+  /*public function viewjob($id, $token){
   		$jobs = TableRegistry::get('Jobs');
 		$query = $jobs->get($id);
 		$this->set(['query' => $query]);
  		$this->render('viewjob');
+  }*/
+  // edit the job
+  public function edit($id, $token) {
+  	  	$jobs = TableRegistry::get('Jobs');
+		$job = $jobs->get($id);
+		if ($this->request->is(['post', 'put'])) {
+			$jobs->patchEntity($job, $this->request->data);
+			if ($jobs->save($job)) {
+            		$this->Flash->success(__('Your job has been updated.'));
+            		return $this->redirect(['action' => 'index']);
+        	}
+        	$this->Flash->error(__('Unable to update your job.'));
+		}
+		$this->set(['job' => $job]);
+ 		$this->render('edit');
+  }
+  // delete the job
+  public function delete($id, $token) {
+  	
   }
 }

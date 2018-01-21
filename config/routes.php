@@ -57,8 +57,12 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/home', ['controller' => 'Jobs', 'action' => 'index']);
     $routes->connect('/show/:id', ['controller' => 'Jobs', 'action' => 'show'])
     ->setPass(['id']);
-    $routes->connect('/edit/:id/:token', ['controller' => 'Jobs', 'action' => 'viewjob'])
+    $routes->connect('/edit/:id/:token', ['controller' => 'Jobs', 'action' => 'edit'])
     ->setPass(['id', 'token']);
+    $routes->connect('/delete/:id/:token', ['controller' => 'Jobs', 'action' => 'delete'])
+    ->setPass(['id', 'token']);
+    //$routes->connect('/edit/job/id:/:token', ['controller' => 'Jobs', 'action' => 'edit'])
+    //->setPass(['id', 'token']);
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
      */
