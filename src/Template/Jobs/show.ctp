@@ -7,6 +7,6 @@
   <h3>Job title:</h3>
   <p><?php echo $job->name; ?></p>
   <h3>Job description</h3>
-  <p><?php echo $job->desription; ?></p>
-  <?php echo $this->Html->link('Home', ['controller' => 'Jobs', 'action' => 'index');?>
+  <p><?php echo $job->description; ?></p>
+  <?php echo $this->Html->link('Home', ['controller' => 'Jobs', 'action' => 'index']);?>
 </div>

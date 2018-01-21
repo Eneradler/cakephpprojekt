@@ -14,5 +14,5 @@
       </tr>
     <?php  endforeach?>
   </table>
-  <?php echo $this->Html->link('Home', ['controller' => 'Jobs', 'action' => 'index');?>
+  <?php echo $this->Html->link('Home', ['controller' => 'Jobs', 'action' => 'index']);?>
 </div>

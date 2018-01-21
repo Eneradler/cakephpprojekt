@@ -75,7 +75,7 @@ class JobsController extends AppController
   			$id = $job->id;
   			$url= Router::url([
     			"controller" => "Jobs",
-    			"action" => "viewjob",
+    			"action" => "edit",
     			$id,
     			$token,
     			'_full' => true
