@@ -4,7 +4,7 @@
 <div class="main">
   <p>Edit the job:</p>
   <?php
-      echo $this->Form->create($job/*, ['url' => ['action' => 'edit']]*/);
+      echo $this->Form->create($job);
       echo $this->Form->control('name');
       echo $this->Form->control('description');
       echo $this->Form->Submit('Edit');

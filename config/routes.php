@@ -50,19 +50,24 @@ Router::scope('/', function (RouteBuilder $routes) {
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
     $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
-    $routes->connect('/user', ['controller' => 'User', 'action' => 'index']);
-    $routes->connect('/userlist', ['controller' => 'User', 'action' => 'list']);
+    //$routes->connect('/user', ['controller' => 'User', 'action' => 'index']);
+    //$routes->connect('/userlist', ['controller' => 'User', 'action' => 'list']);
+
+    // list of all jobs
     $routes->connect('/jobs', ['controller' => 'Jobs', 'action' => 'list']);
+    // create a job
     $routes->connect('/create', ['controller' => 'Jobs', 'action' => 'create']);
+    // homepage
     $routes->connect('/home', ['controller' => 'Jobs', 'action' => 'index']);
+    // view a job
     $routes->connect('/show/:id', ['controller' => 'Jobs', 'action' => 'show'])
     ->setPass(['id']);
+    // edit a job
     $routes->connect('/edit/:id/:token', ['controller' => 'Jobs', 'action' => 'edit'])
     ->setPass(['id', 'token']);
+    // delete the job
     $routes->connect('/delete/:id/:token', ['controller' => 'Jobs', 'action' => 'delete'])
     ->setPass(['id', 'token']);
-    //$routes->connect('/edit/job/id:/:token', ['controller' => 'Jobs', 'action' => 'edit'])
-    //->setPass(['id', 'token']);
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
      */

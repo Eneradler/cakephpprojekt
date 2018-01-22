@@ -3,7 +3,7 @@
 </div>
 <div class="formcontainer">
    <?php
-      echo $this->Form->create($job/*, ['url' => ['action' => 'add']]*/);
+      echo $this->Form->create($job);
       echo $this->Form->control('name');
       echo $this->Form->control('description');
       echo $this->Form->control('email');
@@ -11,4 +11,6 @@
       echo $this->Form->Submit('Create');
       echo $this->Form->end();
    ?>
-</div>>
+</div>
+<br>
+<p><?php echo $this->Html->link('Home', ['controller' => 'Jobs', 'action' => 'index']);?></p>

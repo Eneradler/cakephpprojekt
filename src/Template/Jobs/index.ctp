@@ -4,7 +4,6 @@
 <div class="main">
 	<p>What would you like to do?</p>
 	<ul>
-		<li><a href="/jobs">See the list of the jobs</a></li>
-		<li><a href="/create">Create a new job</a></li>
-	</ul>
+		<li><?php echo $this->Html->link('See the list of the jobs', ['controller' => 'Jobs', 'action' => 'list']);?></li>
+		<li><?php echo $this->Html->link('Create a new job', ['controller' => 'Jobs', 'action' => 'create']);?></li>
 </div>
